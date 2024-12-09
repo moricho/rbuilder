@@ -209,7 +209,7 @@ impl BlockData {
     }
 
     fn is_validator_fee_payment(&self, tx: &Transaction) -> bool {
-        tx.from == self.onchain_block.header.miner
+        tx.from == self.onchain_block.header.beneficiary
             && tx
                 .to
                 .is_some_and(|to| to == self.winning_bid_trace.proposer_fee_recipient)

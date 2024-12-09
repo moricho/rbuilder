@@ -210,7 +210,7 @@ pub fn find_suggested_fee_recipient(
     block: &alloy_rpc_types::Block,
     txs: &[TransactionSignedEcRecoveredWithBlobs],
 ) -> Address {
-    let coinbase = block.header.miner;
+    let coinbase = block.header.beneficiary;
     let (last_tx_signer, last_tx_to) = if let Some((signer, to)) = txs
         .last()
         .map(|tx| (tx.signer(), tx.to().unwrap_or_default()))
