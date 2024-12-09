@@ -24,14 +24,16 @@ use crate::{
     utils::{a2r_withdrawal, calc_gas_limit, timestamp_as_u64, Signer},
 };
 use ahash::HashSet;
-use alloy_eips::{calc_excess_blob_gas, eip7685::Requests, merge::BEACON_NONCE};
+use alloy_eips::{
+    calc_excess_blob_gas, eip4844::BlobTransactionSidecar, eip7685::Requests, merge::BEACON_NONCE,
+};
 use alloy_rpc_types_beacon::events::PayloadAttributesEvent;
 use jsonrpsee::core::Serialize;
 use reth::{
     payload::PayloadId,
     primitives::{
-        proofs, revm_primitives::InvalidTransaction, BlobTransactionSidecar, Block, Head, Header,
-        Receipt, Receipts, SealedBlock, Withdrawals,
+        proofs, revm_primitives::InvalidTransaction, Block, Head, Header, Receipt, Receipts,
+        SealedBlock, Withdrawals,
     },
     providers::ExecutionOutcome,
     revm::cached::CachedReads,
