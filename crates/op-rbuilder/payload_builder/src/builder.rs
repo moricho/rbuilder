@@ -583,7 +583,7 @@ where
 
     let payload = OpBuiltPayload::new(
         attributes.payload_attributes.id,
-        sealed_block,
+        Arc::new(sealed_block),
         total_fees,
         chain_spec,
         attributes,
