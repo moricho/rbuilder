@@ -12,9 +12,9 @@ use reth_evm::{system_calls::SystemCaller, ConfigureEvm, ConfigureEvmEnv, NextBl
 use reth_execution_types::ExecutionOutcome;
 use reth_optimism_chainspec::OpChainSpec;
 use reth_optimism_consensus::calculate_receipt_root_no_memo_optimism;
-use reth_optimism_forks::OptimismHardforks;
+use reth_optimism_forks::OpHardforks;
 use reth_optimism_node::{OpBuiltPayload, OpPayloadBuilderAttributes};
-use reth_optimism_payload_builder::error::OptimismPayloadBuilderError;
+use reth_optimism_payload_builder::error::OpPayloadBuilderError;
 use reth_payload_builder::PayloadBuilderError;
 use reth_payload_primitives::PayloadBuilderAttributes;
 use reth_primitives::{proofs, Block, BlockBody, Header, Receipt, TransactionSigned, TxType};
@@ -257,7 +257,7 @@ where
     )
     .map_err(|err| {
         warn!(target: "payload_builder", %err, "missing create2 deployer, skipping block.");
-        PayloadBuilderError::other(OptimismPayloadBuilderError::ForceCreate2DeployerFail)
+        PayloadBuilderError::other(OpPayloadBuilderError::ForceCreate2DeployerFail)
     })?;
 
     let mut receipts = Vec::with_capacity(attributes.transactions.len());
@@ -270,7 +270,7 @@ where
         // A sequencer's block should never contain blob transactions.
         if sequencer_tx.value().is_eip4844() {
             return Err(PayloadBuilderError::other(
-                OptimismPayloadBuilderError::BlobTransactionRejected,
+                OpPayloadBuilderError::BlobTransactionRejected,
             ));
         }
 
@@ -283,7 +283,7 @@ where
             .clone()
             .try_into_ecrecovered()
             .map_err(|_| {
-                PayloadBuilderError::other(OptimismPayloadBuilderError::TransactionEcRecoverFailed)
+                PayloadBuilderError::other(OpPayloadBuilderError::TransactionEcRecoverFailed)
             })?;
 
         // Cache the depositor account prior to the state transition for the deposit nonce.
@@ -298,7 +298,7 @@ where
             })
             .transpose()
             .map_err(|_| {
-                PayloadBuilderError::other(OptimismPayloadBuilderError::AccountLoadFailed(
+                PayloadBuilderError::other(OpPayloadBuilderError::AccountLoadFailed(
                     sequencer_tx.signer(),
                 ))
             })?;
@@ -386,7 +386,7 @@ where
 
         // convert tx to a signed transaction
         let tx = pool_tx.try_into_ecrecovered().map_err(|_| {
-            PayloadBuilderError::other(OptimismPayloadBuilderError::TransactionEcRecoverFailed)
+            PayloadBuilderError::other(OpPayloadBuilderError::TransactionEcRecoverFailed)
         })?;
 
         let env = EnvWithHandlerCfg::new_with_cfg_env(
