@@ -25,16 +25,14 @@ use crate::{
 };
 use ahash::HashSet;
 use alloy_eips::{
-    calc_excess_blob_gas, eip4844::BlobTransactionSidecar, eip7685::Requests, merge::BEACON_NONCE,
+    calc_excess_blob_gas, eip4844::BlobTransactionSidecar, eip4895::Withdrawals, eip7685::Requests,
+    merge::BEACON_NONCE,
 };
 use alloy_rpc_types_beacon::events::PayloadAttributesEvent;
 use jsonrpsee::core::Serialize;
 use reth::{
     payload::PayloadId,
-    primitives::{
-        proofs, revm_primitives::InvalidTransaction, Block, Head, Receipt, Receipts, SealedBlock,
-        Withdrawals,
-    },
+    primitives::{proofs, Block, Head, Receipt, Receipts, SealedBlock},
     providers::ExecutionOutcome,
     revm::cached::CachedReads,
 };
@@ -49,6 +47,7 @@ use revm::{
     db::states::bundle_state::BundleRetention,
     primitives::{BlobExcessGasAndPrice, BlockEnv, CfgEnvWithHandlerCfg, SpecId},
 };
+use revm_primitives::InvalidTransaction;
 use serde::Deserialize;
 use std::{
     hash::Hash,
@@ -195,7 +194,7 @@ impl BlockBuildingContext {
             coinbase,
             timestamp: U256::from(onchain_block.header.timestamp),
             difficulty: onchain_block.header.difficulty,
-            prevrandao: onchain_block.header.mix_hash,
+            prevrandao: Some(onchain_block.header.mix_hash),
             basefee: U256::from(
                 onchain_block
                     .header
@@ -221,7 +220,7 @@ impl BlockBuildingContext {
             parent: onchain_block.header.parent_hash,
             timestamp: timestamp_as_u64(&onchain_block),
             suggested_fee_recipient,
-            prev_randao: onchain_block.header.mix_hash.unwrap_or_default(),
+            prev_randao: onchain_block.header.mix_hash,
             withdrawals,
             parent_beacon_block_root: onchain_block.header.parent_beacon_block_root,
         };
