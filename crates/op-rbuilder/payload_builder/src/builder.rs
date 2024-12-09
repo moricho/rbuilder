@@ -1,6 +1,6 @@
 //! Optimism payload builder implementation with Flashbots bundle support.
 
-use alloy_consensus::{BlockHeader, Transaction, EMPTY_OMMER_ROOT_HASH};
+use alloy_consensus::{BlockHeader, Header, Transaction, EMPTY_OMMER_ROOT_HASH};
 use alloy_eips::merge::BEACON_NONCE;
 use alloy_rpc_types_beacon::events::{PayloadAttributesData, PayloadAttributesEvent};
 use alloy_rpc_types_engine::payload::PayloadAttributes;
@@ -17,7 +17,7 @@ use reth_optimism_node::{OpBuiltPayload, OpPayloadBuilderAttributes};
 use reth_optimism_payload_builder::error::OpPayloadBuilderError;
 use reth_payload_builder::PayloadBuilderError;
 use reth_payload_primitives::PayloadBuilderAttributes;
-use reth_primitives::{proofs, Block, BlockBody, Header, Receipt, TransactionSigned, TxType};
+use reth_primitives::{proofs, Block, BlockBody, Receipt, TransactionSigned, TxType};
 use reth_provider::StateProviderFactory;
 use reth_revm::database::StateProviderDatabase;
 use reth_trie::HashedPostState;

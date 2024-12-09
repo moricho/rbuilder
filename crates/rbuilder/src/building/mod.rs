@@ -10,7 +10,7 @@ pub mod payout_tx;
 pub mod sim;
 pub mod testing;
 pub mod tracers;
-use alloy_consensus::EMPTY_OMMER_ROOT_HASH;
+use alloy_consensus::{Header, EMPTY_OMMER_ROOT_HASH};
 use alloy_primitives::{Address, Bytes, Sealable, U256};
 pub use block_orders::BlockOrders;
 use eth_sparse_mpt::SparseTrieSharedCache;
@@ -32,8 +32,8 @@ use jsonrpsee::core::Serialize;
 use reth::{
     payload::PayloadId,
     primitives::{
-        proofs, revm_primitives::InvalidTransaction, Block, Head, Header, Receipt, Receipts,
-        SealedBlock, Withdrawals,
+        proofs, revm_primitives::InvalidTransaction, Block, Head, Receipt, Receipts, SealedBlock,
+        Withdrawals,
     },
     providers::ExecutionOutcome,
     revm::cached::CachedReads,
