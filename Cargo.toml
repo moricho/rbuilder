@@ -119,7 +119,6 @@ alloy-signer-local = { version = "0.6.4" }
 alloy-genesis = { version = "0.6.4" }
 alloy-trie = { version = "0.7" }
 
-
 async-trait = { version = "0.1.83" }
 clap = { version = "4.4.3" }
 thiserror = { version = "1.0.64" }

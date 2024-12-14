@@ -621,9 +621,11 @@ mod test {
             SimValue,
         },
     };
-    use alloy_primitives::{hex, Address, Bloom, Bytes, B256, U256, U64};
-    use alloy_rpc_types::{Block, BlockTransactions, Header, Signature, Transaction};
+    use alloy_consensus::TxEnvelope;
+    use alloy_primitives::{hex, Address, PrimitiveSignature, B256, U256, U64};
+    use alloy_rpc_types::{Block, BlockTransactions, Header, Transaction};
     use time::OffsetDateTime;
+
     #[tokio::test]
     async fn test_create_tables() {
         let mut storage = HistoricalDataStorage::new_from_memory().await.unwrap();
@@ -741,32 +743,27 @@ mod test {
     }
 
     fn create_test_tx() -> Transaction {
-        Transaction {
-            hash: B256::with_last_byte(1),
+        let inner_tx = alloy_consensus::TxEip1559 {
+            chain_id: 1,
             nonce: 2,
+            gas_limit: 3,
+            max_fee_per_gas: 4,
+            max_priority_fee_per_gas: 5,
+            value: U256::from(6),
+            ..Default::default()
+        };
+        let tx = alloy_consensus::Signed::new_unchecked(
+            inner_tx,
+            PrimitiveSignature::test_signature(),
+            B256::default(),
+        );
+        Transaction {
+            inner: TxEnvelope::from(tx),
             block_hash: Some(B256::with_last_byte(3)),
             block_number: Some(4),
             transaction_index: Some(5),
             from: Address::with_last_byte(6),
-            to: Some(Address::with_last_byte(7)),
-            value: U256::from(8),
-            gas_price: Some(9),
-            gas: 10,
-            input: Bytes::from(vec![11, 12, 13]),
-            signature: Some(Signature {
-                v: U256::from(14),
-                r: U256::from(14),
-                s: U256::from(14),
-                y_parity: None,
-            }),
-            chain_id: Some(17),
-            blob_versioned_hashes: None,
-            access_list: None,
-            transaction_type: Some(20),
-            max_fee_per_gas: Some(21),
-            max_priority_fee_per_gas: Some(22),
-            max_fee_per_blob_gas: None,
-            authorization_list: None,
+            effective_gas_price: Some(7),
         }
     }
 }
